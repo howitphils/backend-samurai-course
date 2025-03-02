@@ -1,13 +1,8 @@
 {
   "name": "back-samurai",
   "version": "1.0.0",
-  "main": "server.js",
-  "type": "module",
-  "scripts": {
-    "start": "node --watch server.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": ""
+  "main": "index.js",
+  "repository": "git@github.com:howitphils/backend-samurai-course.git",
+  "author": "howitphils <uladzislauhr@gmail.com>",
+  "license": "MIT"
 }
