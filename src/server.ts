@@ -1,13 +1,11 @@
 import express from "express";
+import firstRouter from "./router";
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3003;
 
-app.get("/", (req, res) => {
-  res.send("Hi");
-});
+app.use("/", firstRouter);
 
-app.listen(port, (err) => {
-  if (err) console.log(err.message);
-  else console.log(`listening on port ${port}`);
+app.listen(port, () => {
+  console.log(`listening on port ${port}`);
 });

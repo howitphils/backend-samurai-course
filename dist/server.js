@@ -4,14 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
+const router_1 = __importDefault(require("./router"));
 const app = (0, express_1.default)();
-const port = 3001;
-app.get("/", (req, res) => {
-    res.send("Hi");
-});
-app.listen(port, (err) => {
-    if (err)
-        console.log(err.message);
-    else
-        console.log(`listening on port ${port}`);
+const port = process.env.PORT || 3003;
+app.use("/", router_1.default);
+app.listen(port, () => {
+    console.log(`listening on port ${port}`);
 });
