@@ -5,8 +5,10 @@ import {
   InputVideoTypeUpdate,
   OutputVideoType,
 } from "../types/videos-types";
-import { postVideoBodyValidation } from "../validators/validators";
-import { OutputErrorsType } from "../types/output-error-type";
+import {
+  postVideoBodyValidation,
+  updateVideoBodyValidation,
+} from "../validators/validators";
 
 const videosController = {
   getVideos: (req: Request, res: Response) => {
@@ -20,6 +22,57 @@ const videosController = {
     }
     res.status(200).json(video);
   },
+  postVideo: (req: Request<{}, {}, InputVideoTypePost>, res: Response) => {
+    const errors = postVideoBodyValidation(req.body);
+    if (errors.errorsMessages.length) {
+      res.status(400).json(errors);
+      return;
+    }
+    const newVideo: OutputVideoType = {
+      ...req.body,
+      id: Math.random() * 1000,
+      canBeDownloaded: false,
+      minAgeRestriction: null,
+      createdAt: new Date().toISOString(),
+      publicationDate: new Date().toISOString() + 1,
+    };
+    db.videos.unshift(newVideo);
+    res.status(201).json(newVideo);
+  },
+  updateVideo: (
+    req: Request<{ id: string }, {}, InputVideoTypeUpdate>,
+    res: Response
+  ) => {
+    const video = db.videos.find((video) => video.id === +req.params.id);
+    if (!video) {
+      res.sendStatus(404);
+      return;
+    }
+
+    const errors = updateVideoBodyValidation(req.body);
+    if (errors.errorsMessages.length) {
+      res.status(400).json(errors);
+      return;
+    }
+
+    db.videos = db.videos.map((vid) => {
+      if (video.id === vid.id) {
+        return { ...vid, ...req.body };
+      } else {
+        return vid;
+      }
+    });
+    res.sendStatus(204);
+  },
+  deleteVideo: (req: Request<{ id: string }>, res: Response) => {
+    const video = db.videos.find((video) => video.id === +req.params.id);
+    if (!video) {
+      res.sendStatus(404);
+      return;
+    }
+    db.videos = db.videos.filter((vid) => vid.id !== +req.params.id);
+    res.sendStatus(204);
+  },
 };
 
 export const videosRouter = Router();
@@ -28,61 +81,8 @@ videosRouter.get("/", videosController.getVideos);
 
 videosRouter.get("/:id", videosController.getVideoById);
 
-videosRouter.post("/", (req: Request<{}, {}, InputVideoTypePost>, res) => {
-  const errors = postVideoBodyValidation(req.body);
-  if (errors.errorsMessages.length) {
-    res.status(400).json(errors);
-    return;
-  }
-  const newVideo: OutputVideoType = {
-    ...req.body,
-    id: Math.random() * 1000,
-    canBeDownloaded: false,
-    minAgeRestriction: null,
-    createdAt: new Date().toISOString(),
-    publicationDate: new Date().toISOString() + 1,
-  };
-  db.videos.unshift(newVideo);
-  res.status(201).json(newVideo);
-});
+videosRouter.post("/", videosController.postVideo);
 
-videosRouter.put(
-  "/:id",
-  (req: Request<{ id: string }, {}, InputVideoTypeUpdate>, res) => {
-    const video = db.videos.find((video) => video.id === +req.params.id);
-    if (!video) {
-      res.sendStatus(404);
-      return;
-    }
-    const {
-      author,
-      availableResolutions,
-      canBeDownloaded,
-      minAgeRestriction,
-      publicationDate,
-      title,
-    } = req.body;
-    const errors: OutputErrorsType = {
-      errorsMessages: [],
-    };
+videosRouter.put("/:id", videosController.updateVideo);
 
-    if (!author || !author.trim() || author.length > 40) {
-      errors.errorsMessages.push({
-        message: "Invalid",
-        field: "author",
-      });
-    }
-
-    res.sendStatus(204);
-  }
-);
-
-videosRouter.delete("/:id", (req: Request<{ id: string }>, res) => {
-  const video = db.videos.find((video) => video.id === +req.params.id);
-  if (!video) {
-    res.sendStatus(404);
-    return;
-  }
-  db.videos = db.videos.filter((vid) => vid.id !== +req.params.id);
-  res.sendStatus(204);
-});
+videosRouter.delete("/:id", videosController.deleteVideo);

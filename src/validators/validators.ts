@@ -1,33 +1,100 @@
-import { OutputErrorsType } from "../types/output-error-type";
-import { InputVideoTypePost, Resolutions } from "../types/videos-types";
+import { ErrorType, OutputErrorsType } from "../types/output-error-type";
+import {
+  InputVideoTypePost,
+  InputVideoTypeUpdate,
+  Resolutions,
+} from "../types/videos-types";
+
+export const createError = (field: string): ErrorType => {
+  return {
+    field,
+    message: `Invalid ${field} input`,
+  };
+};
 
 export const postVideoBodyValidation = (body: InputVideoTypePost) => {
   const errors: OutputErrorsType = {
     errorsMessages: [],
   };
   const { author, availableResolutions, title } = body;
+  if (!validateAuthor(author)) {
+    errors.errorsMessages.push(createError("author"));
+  }
+  if (!validateTitle(title)) {
+    errors.errorsMessages.push(createError("title"));
+  }
+  if (!validateAvailableResolutions(availableResolutions)) {
+    errors.errorsMessages.push(createError("availableResolutions"));
+  }
 
-  if (!author || !author.trim() || author.length > 20) {
-    errors.errorsMessages.push({
-      message: "Invalid author input",
-      field: "author",
-    });
-  }
-  if (!title || !title.trim() || title.length > 40) {
-    errors.errorsMessages.push({
-      message: "Invalid title input",
-      field: "title",
-    });
-  }
-  if (
-    !availableResolutions ||
-    !availableResolutions.length ||
-    !body.availableResolutions.find((p) => Resolutions[p])
-  ) {
-    errors.errorsMessages.push({
-      message: "Invalid availableResolutions input",
-      field: "availableResolutions",
-    });
-  }
   return errors;
 };
+
+export const updateVideoBodyValidation = (body: InputVideoTypeUpdate) => {
+  const errors: OutputErrorsType = {
+    errorsMessages: [],
+  };
+
+  const {
+    author,
+    availableResolutions,
+    canBeDownloaded,
+    minAgeRestriction,
+    publicationDate,
+    title,
+  } = body;
+
+  if (!validateAuthor(author)) {
+    errors.errorsMessages.push(createError("author"));
+  }
+  if (!validateTitle(title)) {
+    errors.errorsMessages.push(createError("title"));
+  }
+  if (!validateAvailableResolutions(availableResolutions)) {
+    errors.errorsMessages.push(createError("availableResolutions"));
+  }
+
+  if (validateCanBeDownloaded(canBeDownloaded)) {
+    errors.errorsMessages.push(createError("canBeDownloaded"));
+  }
+
+  if (!validateMinAgeRestriction(minAgeRestriction)) {
+    errors.errorsMessages.push(createError("canBeDownloaded"));
+  }
+
+  if (!validatePublicationDate(publicationDate)) {
+    errors.errorsMessages.push(createError("canBeDownloaded"));
+  }
+
+  return errors;
+};
+
+const validateAuthor = (author: string | undefined) =>
+  !(!author || !author.trim() || author.length > 20);
+
+const validateTitle = (title: string | undefined) =>
+  !(!title || !title.trim() || title.length > 40);
+
+const validateAvailableResolutions = (availableResolutions: Resolutions[]) =>
+  !(
+    !availableResolutions ||
+    !availableResolutions.length ||
+    !availableResolutions.find((p) => Resolutions[p])
+  );
+
+const validateMinAgeRestriction = (a: number | null) => {
+  if (a === null) {
+    return true;
+  }
+  if (a > 18 || a < 1) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+const validatePublicationDate = (date: string | undefined) =>
+  !(!date || typeof date !== "string");
+
+const validateCanBeDownloaded = (a: boolean | undefined) =>
+  !a || typeof a !== "boolean";
