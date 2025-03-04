@@ -19,11 +19,20 @@ export type OutputVideoType = {
   minAgeRestriction: null;
   createdAt: string;
   publicationDate: string;
-  availableResolution: Resolutions[];
+  availableResolutions: Resolutions[];
 };
 
-export type InputVideoType = {
+export type InputVideoTypePost = {
   title: string;
   author: string;
-  availableResolution: Resolutions[];
+  availableResolutions: Resolutions[];
+};
+
+export type InputVideoTypeUpdate = {
+  title: string;
+  author: string;
+  availableResolutions: Resolutions[];
+  canBeDownloaded: boolean;
+  minAgeRestriction: number;
+  publicationDate: string;
 };

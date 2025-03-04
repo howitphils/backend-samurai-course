@@ -1,5 +1,5 @@
 import express from "express";
-import videosRouter from "./routes/router";
+import { videosRouter } from "./routes/videos-router";
 import { settings } from "./settings";
 
 export const app = express();
