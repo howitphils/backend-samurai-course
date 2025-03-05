@@ -11,7 +11,7 @@ app.use(SETTINGS.PATH.VIDEOS, videosRouter);
 app.get("/", (req, res) => {
   res.send("Hello, world");
 });
-app.delete("testing/all-data", (req, res) => {
+app.delete("/testing/all-data", (req, res) => {
   db.videos = [];
   res.sendStatus(204);
 });
