@@ -54,16 +54,16 @@ export const updateVideoBodyValidation = (body: InputVideoTypeUpdate) => {
     errors.errorsMessages.push(createError("availableResolutions"));
   }
 
-  if (validateCanBeDownloaded(canBeDownloaded)) {
+  if (!validateCanBeDownloaded(canBeDownloaded)) {
     errors.errorsMessages.push(createError("canBeDownloaded"));
   }
 
   if (!validateMinAgeRestriction(minAgeRestriction)) {
-    errors.errorsMessages.push(createError("canBeDownloaded"));
+    errors.errorsMessages.push(createError("minAgeRestriction"));
   }
 
   if (!validatePublicationDate(publicationDate)) {
-    errors.errorsMessages.push(createError("canBeDownloaded"));
+    errors.errorsMessages.push(createError("publicationDate"));
   }
 
   return errors;
@@ -96,4 +96,4 @@ const validateMinAgeRestriction = (a: number | null) => {
 const validatePublicationDate = (date: string) =>
   !(!date || typeof date !== "string");
 
-const validateCanBeDownloaded = (a: boolean) => !a || typeof a !== "boolean";
+const validateCanBeDownloaded = (a: boolean) => typeof a === "boolean";

@@ -8,4 +8,6 @@ export const db: DbType = {
   videos: [],
 };
 
-export const setDb = () => {};
+export const setDb = () => {
+  db.videos = [];
+};
