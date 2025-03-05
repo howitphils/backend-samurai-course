@@ -37,7 +37,7 @@ const videosController = {
       canBeDownloaded: false,
       minAgeRestriction: null,
       createdAt: new Date().toISOString(),
-      publicationDate: new Date().toISOString() + 1,
+      publicationDate: new Date().toISOString(),
     };
     db.videos.unshift(newVideo);
     res.status(201).json(newVideo);
@@ -89,3 +89,8 @@ videosRouter.post("/", videosController.postVideo);
 videosRouter.put("/:id", videosController.updateVideo);
 
 videosRouter.delete("/:id", videosController.deleteVideo);
+
+videosRouter.delete("/testing/all-data", (req, res) => {
+  db.videos = [];
+  res.sendStatus(204);
+});

@@ -79,7 +79,7 @@ const validateAvailableResolutions = (availableResolutions: Resolutions[]) =>
   !(
     !availableResolutions ||
     !availableResolutions.length ||
-    !availableResolutions.find((p) => Resolutions[p])
+    !availableResolutions.every((p) => Resolutions[p])
   );
 
 const validateMinAgeRestriction = (a: number | null) => {
