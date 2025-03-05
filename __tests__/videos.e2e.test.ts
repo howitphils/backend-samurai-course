@@ -5,7 +5,6 @@ import { setDb } from "../src/db/db";
 describe("/testing", () => {
   it("should remove all data", async () => {
     const res = await req.delete("/testing/all-data");
-    setDb();
     expect(res.status).toBe(204);
   });
 });
