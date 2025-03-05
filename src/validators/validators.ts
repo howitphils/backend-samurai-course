@@ -69,10 +69,10 @@ export const updateVideoBodyValidation = (body: InputVideoTypeUpdate) => {
   return errors;
 };
 
-const validateAuthor = (author: string | undefined) =>
+const validateAuthor = (author: string) =>
   !(!author || !author.trim() || author.length > 20);
 
-const validateTitle = (title: string | undefined) =>
+const validateTitle = (title: string) =>
   !(!title || !title.trim() || title.length > 40);
 
 const validateAvailableResolutions = (availableResolutions: Resolutions[]) =>
@@ -93,8 +93,7 @@ const validateMinAgeRestriction = (a: number | null) => {
   }
 };
 
-const validatePublicationDate = (date: string | undefined) =>
+const validatePublicationDate = (date: string) =>
   !(!date || typeof date !== "string");
 
-const validateCanBeDownloaded = (a: boolean | undefined) =>
-  !a || typeof a !== "boolean";
+const validateCanBeDownloaded = (a: boolean) => !a || typeof a !== "boolean";

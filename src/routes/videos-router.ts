@@ -10,12 +10,15 @@ import {
   updateVideoBodyValidation,
 } from "../validators/validators";
 
+const findVideoHelper = (id: string) =>
+  db.videos.find((video) => video.id === +id);
+
 const videosController = {
   getVideos: (req: Request, res: Response) => {
     res.status(200).json(db.videos);
   },
-  getVideoById: (req: Request, res: Response) => {
-    const video = db.videos.find((video) => video.id === +req.params.id);
+  getVideoById: (req: Request<{ id: string }>, res: Response) => {
+    const video = findVideoHelper(req.params.id);
     if (!video) {
       res.sendStatus(404);
       return;
@@ -43,7 +46,7 @@ const videosController = {
     req: Request<{ id: string }, {}, InputVideoTypeUpdate>,
     res: Response
   ) => {
-    const video = db.videos.find((video) => video.id === +req.params.id);
+    const video = findVideoHelper(req.params.id);
     if (!video) {
       res.sendStatus(404);
       return;
@@ -65,7 +68,7 @@ const videosController = {
     res.sendStatus(204);
   },
   deleteVideo: (req: Request<{ id: string }>, res: Response) => {
-    const video = db.videos.find((video) => video.id === +req.params.id);
+    const video = findVideoHelper(req.params.id);
     if (!video) {
       res.sendStatus(404);
       return;
