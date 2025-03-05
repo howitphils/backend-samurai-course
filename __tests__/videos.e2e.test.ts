@@ -63,10 +63,12 @@ describe("/videos", () => {
 
   it("should not add a video with invalid properites to db", async () => {
     const res = await req.post(SETTINGS.PATH.VIDEOS).send({
-      title: "asdasdasdasdasdasdasdasdad",
+      title: "asdasdasdasdasdasdasdasdadaaaaaaaaaaaaaaaaaaaaaaaaaaa",
       author: "",
-      availableResolutions: ["P1441"],
+      availableResolutions: ["P144", "Invalid", "P720"],
     });
+    console.log(res.body);
+
     expect(res.status).toBe(400);
     expect(res.body).toHaveProperty("errorsMessages");
   });

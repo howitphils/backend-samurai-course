@@ -89,8 +89,3 @@ videosRouter.post("/", videosController.postVideo);
 videosRouter.put("/:id", videosController.updateVideo);
 
 videosRouter.delete("/:id", videosController.deleteVideo);
-
-videosRouter.delete("/testing/all-data", (req, res) => {
-  db.videos = [];
-  res.sendStatus(204);
-});
