@@ -31,13 +31,15 @@ const videosController = {
       res.status(400).json(errors);
       return;
     }
+
+    const date = new Date();
     const newVideo: OutputVideoType = {
       ...req.body,
       id: Math.random() * 1000,
       canBeDownloaded: false,
       minAgeRestriction: null,
-      createdAt: new Date().toISOString(),
-      publicationDate: new Date().toISOString(),
+      createdAt: date.toISOString(),
+      publicationDate: new Date(date.setDate(date.getDate() + 1)).toISOString(),
     };
     db.videos.unshift(newVideo);
     res.status(201).json(newVideo);
