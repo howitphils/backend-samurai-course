@@ -2,6 +2,14 @@ import { req } from "./test-helpers";
 import { SETTINGS } from "../src/settings";
 import { setDb } from "../src/db/db";
 
+describe("/testing", () => {
+  it("should remove all data", async () => {
+    const res = await req.delete("/testing/all-data");
+    setDb();
+    expect(res.status).toBe(204);
+  });
+});
+
 describe("/videos", () => {
   beforeAll(async () => {
     // очистка базы данных перед началом тестирования
